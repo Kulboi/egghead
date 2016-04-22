@@ -1,6 +1,8 @@
-//Kindly define your controllers+ here. Example below...
+//Kindly define your controllers here. Example below...
 
+// Example 
 
-//  function name($scope) {
-        
-// });
+  // app.controller('Ctrl-Name', function($scope, $rootScope, $other-injections){
+  //     $rootScope.appState = "whatever" ;
+
+  //       });
