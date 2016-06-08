@@ -1,8 +1,6 @@
 <?php
-
 require_once 'dbHelper.php';
-  
-  $db = new dbHelper();
+$db = new dbHelper();
 
   $datetime = date('Y-m-d H:i:s'); 
 
@@ -10,7 +8,7 @@ require_once 'dbHelper.php';
 
   $base_server = "http://localhost/project-Folder" ; //absolute Path to project Root folder 
 
-      // db connection
+  // db connection
       $dsn = 'mysql:host='.DB_HOST.';dbname='.DB_NAME.';charset=utf8';
         try {
             $connection = new PDO($dsn, DB_USERNAME, DB_PASSWORD, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -25,6 +23,7 @@ require_once 'dbHelper.php';
 
 
 // Function to creat Slug field form a given string 
+
 function CreateUnderscoreSlug($string) {
 
     $table = array(
@@ -48,7 +47,10 @@ function CreateUnderscoreSlug($string) {
 }
 
 
+
+
 // function to check the entity for Images so as to insert into the right image directory (Required by ImageHandler)
+
 function CheckEntity($entity){
     if ($entity=="whatever") {
         return("whatever-img");
@@ -58,9 +60,10 @@ function CheckEntity($entity){
     }
 }
 
-
 //function to handle images
-function imageHandler($filename,$tmpfilename,$entity) {     
+
+function imageHandler($filename,$tmpfilename,$entity)
+{     
     
        $filename_ext = pathinfo($filename, PATHINFO_EXTENSION);
 
@@ -77,4 +80,106 @@ function imageHandler($filename,$tmpfilename,$entity) {
                  return false;
            }
            
+       }
+
+
+
+
+
+//  function to login Clients 
+  function LoginClients($connection,$email,$password){
+
+    $data =  array();
+    $password =  encrypt( $password ) ;
+    
+  
+  $sql = "SELECT * FROM clients WHERE cli_email = ? ";
+  
+  $query = $connection ->prepare($sql) ;
+
+  $query->execute(array("$email"));
+
+  $num =  $query->rowCount();
+  
+  if($num >0) {
+  $result = $query->setFetchMode(PDO::FETCH_ASSOC);
+    
+
+// echo $_SESSION['email'];
+    while ($row = $query->fetch() ) {
+     
+      $fname = $row['cli_fname'] ;
+      $lname = $row['cli_lname'] ;
+      $db_pass = $row['cli_pass'] ;
+      $db_email = $row['cli_email'];
+      $address = $row['cli_address'];
+      $slug = $row['cli_slug'];
+      $phone = $row['cli_phone'];
+      $id = $row['cli_id'];
+
+      $name = $fname ." ".$lname ;
+
+  
+      // $dpt = $row['name'] ;
+
+    
+    if($db_email==$email){
+      if($db_pass==$password){
+  
+      $_SESSION['fname'] = $fname;
+      $_SESSION['lname'] = $lname;
+      $_SESSION['email'] = $email;
+      $_SESSION['phone'] = $phone;
+      $_SESSION['id'] = $id;
+      $_SESSION['slug'] = $slug;
+      $_SESSION['address'] = $address;
+      $_SESSION['name'] = $name ;
+      
+        
+      // $_SESSION['department'] = $dpt;
+  
+      
+          $expire = time()+60*60*60;
+
+      setcookie('nigerian-companies', $_SESSION['name'], $expire);
+
+      $data['msg'] = "Login Successful" ;
+      $data['status'] = "true" ;
+      $data['slug'] = "$slug" ;
+      $data['erre'] = '' ;
+        // echo "Login Successful";
+      
+      
+      }else{  
+      $data['msg'] = "Unsuccessful" ;
+      $data['status'] = "false" ;
+      $data['erre'] = 'Your password is incorrect!' ;
+        // echo "Your password is incorrect!";
+        
+      }
+    
+    }else{  
+      $data['msg'] = "Unsuccessful" ;
+      $data['status'] = "false" ;
+      $data['erre'] = 'Your Email is incorrect!' ;
+      // echo "Your Email is incorrect!";
+      
+    }
+  }
+  }else{  
+      $data['msg'] = "Unsuccessful" ;
+      $data['status'] = "false" ;
+      $data['erre'] = 'This Email is not registered!' ;
+    
+    // echo "This Email is not registered!";
+      
+  } 
+
+  return $data ; 
 }
+
+
+
+
+
+

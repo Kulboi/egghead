@@ -3,22 +3,24 @@
     <head>
         <title></title>
 
-        <!-- stylesheets -->
         <link rel="stylesheet" href="views/assets/css/main.css">
         <link rel="stylesheet" href="views/assets/css/bootstrap.css">
 
-    <!-- scripts -->
-    <script src="views/assets/js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="views/assets/js/angular.js"></script>
-    <script type="text/javascript" src="controllers/app.js"></script>
-    <script type="text/javascript" src="controllers/controllers.js"></script>
-    <script type="text/javascript" src="controllers/routes.js"></script>
+        <!-- scripts -->
+        <script src="views/assets/js/jquery.js"></script>
+        <script src="views/assets/js/bootstrap.js"></script>
+        <script src="views/assets/js/angular.js"></script>
+        <script src="controllers/app.js"></script>
+        <script src="controllers/controllers.js"></script>
+
     </head>
 
     
-    <body>
+    <body ng-app="">
     	
-       
+        <div id="ng-view" ng-view>
+            
+        </div>
+
     </body>
 </html>
